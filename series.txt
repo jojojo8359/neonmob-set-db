@@ -1,0 +1,14 @@
+set['count'] - number of total series
+set['next'] - next page url (with domain prefix)
+set['results'][X] - series results
+set['results'][X]['id'] - set id
+set['results'][X]['name'] - plaintext name
+set['results'][X]['name_slug'] - slugified name
+set['results'][X]['creator']['username'] - creator username
+set['results'][X]['creator']['name'] - full creator name
+set['results'][X]['description'] - set description
+set['results'][X]['edition_size'] - limited, unlimited, etc.
+set['results'][X]['difficulty']['name'] - difficulty name
+set['results'][X]['replica_parent'] - replica parent set
+set['results'][X]['categories'][X]['name'] - category name
+set['results'][X]['categories'][X]['id'] - category id

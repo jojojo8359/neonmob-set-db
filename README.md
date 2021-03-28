@@ -1,5 +1,5 @@
 # neonmob-set-db
-A (hopefully) self-updating database of all series/sets on NeonMob.
+A self-updating database of all series/sets on NeonMob.
 
 The `db.py` script contains various functions for fetching new data and analyzing existing data.
 

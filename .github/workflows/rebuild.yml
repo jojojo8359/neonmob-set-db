@@ -4,13 +4,9 @@ name: Rebuild database
 
 # Controls when the action will run. 
 on:
-  # Allows you to run this workflow manually from the Actions tab
+  schedule:
+    - cron: "30 19 1 * *"
   workflow_dispatch:
-    inputs:
-      branch:
-        description: 'Branch to push to'
-        required: false
-        default: 'main'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -53,7 +49,7 @@ jobs:
         uses: github-actions-x/commit@v2.8
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          push-branch: ${{ github.event.inputs.branch }}
+          push-branch: 'main'
           commit-message: 'Rebuild database'
           force-add: 'false'
           files: .

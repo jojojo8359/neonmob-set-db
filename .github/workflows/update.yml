@@ -52,4 +52,4 @@ jobs:
           force-add: 'false'
           files: .
           name: NMBot
-          email: elementmania575@gmail.com
+          email: 41898282+github-actions[bot]@users.noreply.github.com

@@ -30,6 +30,8 @@ def checkduplicates(filename):
             found += 1
     end = timer()
     print(str(end-start))
+    if found != 0:
+        raise ValueError("Duplicates found, see output")
 
 def searchbyid(id, filename):
     start = timer()

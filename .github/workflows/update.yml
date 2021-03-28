@@ -1,0 +1,55 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Daily update
+
+# Controls when the action will run. 
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to push to'
+        required: false
+        default: 'main'
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Get recent sets
+        run: python db.py --mode recent -f all-sets.json --pages 5
+      
+      - name: Get upcoming sets
+        run: python db.py --mode upcoming -f all-sets.json
+        
+      - name: Check duplicates
+        run: python db.py --mode check-duplicates -f all-sets.json
+      
+      - name: Push changes
+        uses: github-actions-x/commit@v2.8
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          push-branch: ${{ github.event.inputs.branch }}
+          commit-message: 'Update database'
+          force-add: 'false'
+          files: .
+          name: NMBot
+          email: elementmania575@gmail.com

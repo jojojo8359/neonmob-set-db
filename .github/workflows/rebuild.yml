@@ -45,6 +45,9 @@ jobs:
         
       - name: Check duplicates
         run: python db.py --mode check-duplicates -f all-sets.json
+        
+      - name: Create md5 checksum
+        run: md5sum all-sets.json > all-sets.md5
       
       - name: Push changes
         uses: github-actions-x/commit@v2.8

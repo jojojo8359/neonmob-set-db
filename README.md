@@ -1,4 +1,4 @@
-# neonmob-set-db
+# neonmob-set-db [![Daily update](https://github.com/jojojo8359/neonmob-set-db/actions/workflows/update.yml/badge.svg?event=schedule)](https://github.com/jojojo8359/neonmob-set-db/actions/workflows/update.yml) [![Rebuild database](https://github.com/jojojo8359/neonmob-set-db/actions/workflows/rebuild.yml/badge.svg?event=schedule)](https://github.com/jojojo8359/neonmob-set-db/actions/workflows/rebuild.yml)
 A self-updating database of all series/sets on NeonMob.
 
 The `db.py` script contains various functions for fetching new data and analyzing existing data.

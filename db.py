@@ -94,7 +94,9 @@ def getbase(filename):
                                         'name': set['creator']['name']},
                             'description': set['description'],
                             'edition_size': set['edition_size'],
-                            'difficulty': set['difficulty']['name']})
+                            'difficulty': set['difficulty']['name'],
+                            'released': set['released'],
+                            'discontinue_date': set['discontinue_date']})
                 bar()
             # other bar stuff
             if not nxt:
@@ -121,7 +123,9 @@ def getupcomingsets():
                                         'name': set['creator']['name']},
                             'description': set['description'],
                             'edition_size': set['edition_size'],
-                            'difficulty': set['difficulty']['name']})
+                            'difficulty': set['difficulty']['name'],
+                            'released': set['released'],
+                            'discontinue_date': set['discontinue_date']})
                 bar()
             # other bar stuff
             if not nxt:
@@ -182,7 +186,9 @@ def getrecentsets(pages):
                                         'name': set['creator']['name']},
                             'description': set['description'],
                             'edition_size': set['edition_size'],
-                            'difficulty': set['difficulty']['name']})
+                            'difficulty': set['difficulty']['name'],
+                            'released': set['released'],
+                            'discontinue_date': set['discontinue_date']})
                 bar()
             # other bar stuff
             if not nxt:

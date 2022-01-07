@@ -79,7 +79,8 @@ def searchbystr(s, filename):
 
 def getbase(filename):
     sets = []
-    data = requests.request('GET', "https://www.neonmob.com/api/setts/legacy_list/?category=&release_date=asc&page=1").json()
+    session = requests.Session()
+    data = session.get("https://www.neonmob.com/api/setts/legacy_list/?category=&release_date=asc&page=1").json()
     # https://www.neonmob.com/api/setts/legacy_list/?category=&release_date=asc&page=1
     total = data['count']
 
@@ -101,14 +102,15 @@ def getbase(filename):
             # other bar stuff
             if not nxt:
                 break # pass
-            data = requests.request('GET', nxt).json()
+            data = session.get(nxt).json()
     
     with open(filename, 'w') as f:
         json.dump(sets, f)
 
 def getupcomingsets():
     sets = []
-    data = requests.request('GET', "https://www.neonmob.com/api/setts/legacy_list/?category=coming-soon-series&release_date=asc&page=1").json()
+    session = requests.Session()
+    data = session.get("https://www.neonmob.com/api/setts/legacy_list/?category=coming-soon-series&release_date=asc&page=1").json()
     # https://www.neonmob.com/api/setts/legacy_list/?category=&release_date=asc&page=1
     total = data['count']
 
@@ -130,7 +132,7 @@ def getupcomingsets():
             # other bar stuff
             if not nxt:
                 break # pass
-            data = requests.request('GET', nxt).json()
+            data = session.get(nxt).json()
     return sets
 
 def getupcoming(filename):
@@ -171,7 +173,8 @@ def getupcoming(filename):
 
 def getrecentsets(pages):
     sets = []
-    data = requests.request('GET', "https://www.neonmob.com/api/setts/legacy_list/?category=newest&release_date=desc&page=1").json()
+    session = requests.Session()
+    data = session.get("https://www.neonmob.com/api/setts/legacy_list/?category=newest&release_date=desc&page=1").json()
     # https://www.neonmob.com/api/setts/legacy_list/?category=&release_date=asc&page=1
     total = pages * 9
 
@@ -193,7 +196,7 @@ def getrecentsets(pages):
             # other bar stuff
             if not nxt:
                 break # pass
-            data = requests.request('GET', nxt).json()
+            data = session.get(nxt).json()
     return sets
 
 def getrecent(filename, pages):

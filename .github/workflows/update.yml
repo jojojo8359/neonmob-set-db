@@ -44,7 +44,7 @@ jobs:
         run: md5sum all-sets.json > all-sets.md5
       
       - name: Push changes
-        uses: github-actions-x/commit@v2.8
+        uses: github-actions-x/commit@v2.9
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           push-branch: 'main'

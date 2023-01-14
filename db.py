@@ -5,9 +5,12 @@ import argparse
 import requests
 from alive_progress import alive_bar
 
+
 def printseries(serieslist):
     for series in serieslist:
-        print(series['name'] + ' (' + str(series['id']) + ') by ' + series['creator']['username'] + ': ' + series['difficulty'] + ' ' + series['edition_size'] + ' series')
+        print(series['name'] + ' (' + str(series['id']) + ') by ' + series['creator']['username'] + ': ' + series[
+            'difficulty'] + ' ' + series['edition_size'] + ' series')
+
 
 def checkduplicates(filename):
     start = timer()
@@ -15,7 +18,7 @@ def checkduplicates(filename):
         sets = json.load(f)
     
     tracker = {}
-
+    
     for set in sets:
         if set['id'] in tracker:
             tracker[set['id']] += 1
@@ -29,16 +32,17 @@ def checkduplicates(filename):
             print(str(i) + ": " + str(tracker[i]))
             found += 1
     end = timer()
-    print(str(end-start))
+    print(str(end - start))
     if found != 0:
         raise ValueError("Duplicates found, see output")
 
+
 def searchbyid(id, filename):
     start = timer()
-
+    
     with open(filename, 'r') as f:
         sets = json.load(f)
-
+    
     filtered = list(filter(lambda set: set['id'] == id, sets))
     if len(filtered) == 0:
         print("Nothing found")
@@ -52,16 +56,18 @@ def searchbyid(id, filename):
     end = timer()
     print(str(end - start))
 
+
 def searchbystr(s, filename):
     start = timer()
-
+    
     with open(filename, 'r') as f:
         sets = json.load(f)
-
+    
     results = 0
-
+    
     if len(s) >= 2:
-        filtered = list(filter(lambda set: s.lower() in set['name'].lower() or s.lower() in set['name_slug'].lower(), sets))
+        filtered = list(
+            filter(lambda set: s.lower() in set['name'].lower() or s.lower() in set['name_slug'].lower(), sets))
         results = len(filtered)
         if len(filtered) == 0:
             print("Nothing found")
@@ -73,67 +79,72 @@ def searchbystr(s, filename):
             printseries(filtered)
     else:
         print("not enough stuff")
-
+    
     end = timer()
     print(str(results) + " results in " + str(end - start))
+
 
 def getbase(filename):
     sets = []
     session = requests.Session()
+    session.headers.update({'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36'})
     data = session.get("https://www.neonmob.com/api/setts/legacy_list/?category=&release_date=asc&page=1").json()
     # https://www.neonmob.com/api/setts/legacy_list/?category=&release_date=asc&page=1
     total = data['count']
-
+    
     with alive_bar(total, bar='smooth', spinner='dots_recur') as bar:
         while True:
             nxt = data['next']
             for set in data['results']:
-                sets.append({'id': set['id'],
-                            'name': set['name'],
-                            'name_slug': set['name_slug'],
-                            'creator': {'username': set['creator']['username'],
-                                        'name': set['creator']['name']},
-                            'description': set['description'],
-                            'edition_size': set['edition_size'],
-                            'difficulty': set['difficulty']['name'],
-                            'released': set['released'],
-                            'discontinue_date': set['discontinue_date']})
+                sets.append({'id':               set['id'],
+                             'name':             set['name'],
+                             'name_slug':        set['name_slug'],
+                             'creator':          {'username': set['creator']['username'],
+                                                  'name':     set['creator']['name']},
+                             'description':      set['description'],
+                             'edition_size':     set['edition_size'],
+                             'difficulty':       set['difficulty']['name'],
+                             'released':         set['released'],
+                             'discontinue_date': set['discontinue_date']})
                 bar()
             # other bar stuff
             if not nxt:
-                break # pass
+                break  # pass
             data = session.get(nxt).json()
     
     with open(filename, 'w') as f:
         json.dump(sets, f)
 
+
 def getupcomingsets():
     sets = []
     session = requests.Session()
+    session.headers.update({'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36'})
     data = session.get("https://www.neonmob.com/api/setts/legacy_list/?category=coming-soon-series&release_date=asc&page=1").json()
     # https://www.neonmob.com/api/setts/legacy_list/?category=&release_date=asc&page=1
     total = data['count']
-
+    
     with alive_bar(total, bar='smooth', spinner='dots_recur') as bar:
         while True:
             nxt = data['next']
             for set in data['results']:
-                sets.append({'id': set['id'],
-                            'name': set['name'],
-                            'name_slug': set['name_slug'],
-                            'creator': {'username': set['creator']['username'],
-                                        'name': set['creator']['name']},
-                            'description': set['description'],
-                            'edition_size': set['edition_size'],
-                            'difficulty': set['difficulty']['name'],
-                            'released': set['released'],
-                            'discontinue_date': set['discontinue_date']})
+                sets.append({'id':               set['id'],
+                             'name':             set['name'],
+                             'name_slug':        set['name_slug'],
+                             'creator':          {'username': set['creator']['username'],
+                                                  'name':     set['creator']['name']},
+                             'description':      set['description'],
+                             'edition_size':     set['edition_size'],
+                             'difficulty':       set['difficulty']['name'],
+                             'released':         set['released'],
+                             'discontinue_date': set['discontinue_date']})
                 bar()
             # other bar stuff
             if not nxt:
-                break # pass
+                break  # pass
             data = session.get(nxt).json()
     return sets
+
 
 def getupcoming(filename):
     start = timer()
@@ -143,7 +154,7 @@ def getupcoming(filename):
     setids = []
     for set in sets:
         setids.append(set['id'])
-
+    
     upcoming = getupcomingsets()
     new = 0
     replaced = 0
@@ -158,7 +169,7 @@ def getupcoming(filename):
                     filteredindexes.append(existingindex)
             filteredindexes.sort()
             filteredindexes.reverse()
-
+            
             for i in filteredindexes:
                 sets.pop(i)
             sets.insert(filteredindexes[0], set)
@@ -168,36 +179,39 @@ def getupcoming(filename):
         json.dump(sets, f)
     
     end = timer()
+    
+    print(str(new) + " new sets added, " + str(replaced) + " sets replaced in " + str(end - start))
 
-    print(str(new) + " new sets added, " + str(replaced) + " sets replaced in " + str(end-start))
 
 def getrecentsets(pages):
     sets = []
     session = requests.Session()
+    session.headers.update({'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36'})
     data = session.get("https://www.neonmob.com/api/setts/legacy_list/?category=newest&release_date=desc&page=1").json()
     # https://www.neonmob.com/api/setts/legacy_list/?category=&release_date=asc&page=1
     total = pages * 9
-
+    
     with alive_bar(total, bar='smooth', spinner='dots_recur') as bar:
         for i in range(pages):
             nxt = data['next']
             for set in data['results']:
-                sets.append({'id': set['id'],
-                            'name': set['name'],
-                            'name_slug': set['name_slug'],
-                            'creator': {'username': set['creator']['username'],
-                                        'name': set['creator']['name']},
-                            'description': set['description'],
-                            'edition_size': set['edition_size'],
-                            'difficulty': set['difficulty']['name'],
-                            'released': set['released'],
-                            'discontinue_date': set['discontinue_date']})
+                sets.append({'id':               set['id'],
+                             'name':             set['name'],
+                             'name_slug':        set['name_slug'],
+                             'creator':          {'username': set['creator']['username'],
+                                                  'name':     set['creator']['name']},
+                             'description':      set['description'],
+                             'edition_size':     set['edition_size'],
+                             'difficulty':       set['difficulty']['name'],
+                             'released':         set['released'],
+                             'discontinue_date': set['discontinue_date']})
                 bar()
             # other bar stuff
             if not nxt:
-                break # pass
+                break  # pass
             data = session.get(nxt).json()
     return sets
+
 
 def getrecent(filename, pages):
     start = timer()
@@ -222,7 +236,7 @@ def getrecent(filename, pages):
                     filteredindexes.append(existingindex)
             filteredindexes.sort()
             filteredindexes.reverse()
-
+            
             for i in filteredindexes:
                 sets.pop(i)
             sets.insert(filteredindexes[0], set)
@@ -232,20 +246,23 @@ def getrecent(filename, pages):
         json.dump(sets, f)
     
     end = timer()
-    print(str(new) + " new sets added, " + str(replaced) + " sets replaced in " + str(end-start))
+    print(str(new) + " new sets added, " + str(replaced) + " sets replaced in " + str(end - start))
+
 
 def main():
     parser = argparse.ArgumentParser()
-
-    parser.add_argument('--mode', choices=['search', 'check-duplicates', 'base', 'upcoming', 'recent'], help='specify operating mode (required)', required=True, type=str)
+    
+    parser.add_argument('--mode', choices=['search', 'check-duplicates', 'base', 'upcoming', 'recent'],
+                        help='specify operating mode (required)', required=True, type=str)
     parser.add_argument('-f', required=True, type=str, help='file name (required)', metavar='file_name')
     searches = parser.add_mutually_exclusive_group(required='search' in sys.argv)
     searches.add_argument('--id', help='set id to search', metavar='set_id', type=int)
     searches.add_argument('-s', help='string to search', metavar='str', type=str)
-    parser.add_argument('--pages', help='pages of recent sets to update', metavar='pages', type=int, required='recent' in sys.argv)
-
+    parser.add_argument('--pages', help='pages of recent sets to update', metavar='pages', type=int,
+                        required='recent' in sys.argv)
+    
     args = parser.parse_args()
-
+    
     if args.mode == 'check-duplicates':
         checkduplicates(args.f)
     elif args.mode == 'base':
@@ -261,6 +278,7 @@ def main():
             searchbystr(args.s, args.f)
     else:
         print("Something isn't right")
+
 
 if __name__ == "__main__":
     main()
